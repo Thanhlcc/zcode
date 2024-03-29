@@ -1,0 +1,6 @@
+
+            func main() begin
+                for foo() until 10 by 1
+                    print("Hello")
+            end
+        

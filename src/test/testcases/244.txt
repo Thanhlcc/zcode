@@ -1,0 +1,9 @@
+func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15)
+
+
+            print("You're not of my interest")
+        end
+        

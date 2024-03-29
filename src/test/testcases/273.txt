@@ -1,0 +1,7 @@
+
+        func main() begin
+            var i <- 0
+            for i by update() 
+                print("Hello World")
+        end
+        

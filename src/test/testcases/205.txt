@@ -1,0 +1,11 @@
+
+            func main() begin
+                begin
+                    dynamic name <- "Thanh"
+                end
+
+                
+                print("hello")
+            end
+            
+        

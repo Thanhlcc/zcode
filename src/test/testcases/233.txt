@@ -1,0 +1,6 @@
+
+        number nums[2] <- [1,2]
+        func main() begin
+            nums[1]()
+        end
+        

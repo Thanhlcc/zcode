@@ -1,0 +1,188 @@
+# Declaration
+
+## Function
+
+-   Parameter list
+    -   Null parameter list
+    -   Singleton parameter list
+    -   Multiple parameter list
+    -   Parameter list containing array delaration
+    -   Parameter list containing implicit declaration => Fail
+    -   Omit parameter list boundary
+        -   Left parenthesis
+        -   Right parenthesis
+        -   Both parenthesis
+-   Body
+    -   Optional body
+    -   body is return statement
+    -   body is block statement
+-   Seperator between body and parameter list
+    -   Zero newline
+    -   One newline
+    -   Multiple newline (two newlines)
+
+## Variable:
+
+-   Implicit
+    -   declaration type
+        -   var
+            -   var without assignment => Erorr
+            -   var with assignment
+        -   dynamic
+            -   dynamic with assignment
+            -   dynamic without assignment
+    -   declaration id
+        -   array id => Erorr (Array cannot be used with implit declaration)
+        -   varibable id (**redundant**)
+-   Explicit
+    -   declaration type
+        -   bool
+        -   string
+        -   number
+    -   Optional assignment
+        -   presenting assignment
+        -   omitted assignment
+    -   declaration id
+        -   array id
+            -   zero dimension => Error
+            -   one dimension
+            -   two dimension
+        -   varibable id (**redundant**)
+
+## Statement
+
+-   If stmt
+    -   Simple if
+        -   Separator bwt condition and body
+            -   zero newline
+            -   one newline
+            -   two newline
+        -   Omit body => Error
+            -   if stmt ends up with EOF
+            -   if stmt ends up with "end" of block stmt
+        -   Omit parenthesis for condition => Error
+            -   Left
+            -   Right
+            -   Both
+        -   Omit condition
+            -   empty parenthesis
+            -   completely omit the condition
+    -   If else
+        -   else with condition => Error
+        -   else without preceding "if"
+            1. Completely omit if clause
+            2. Multiple statment followed if statement => it is transparent to else (omitted)
+        -   Omit else body => Error
+            -   ends up with EOF
+        -   Test newlines between if and else
+            -   zero newline => Error
+            -   one newline
+            -   five newline
+        -
+    -   If elif
+        -   If with one following elif
+            -   Separator bwt condition and body
+                -   zero newline
+                -   one newline
+                -   two newline
+            -   Omit body => Error
+                -   if stmt ends up with EOF
+                -   if stmt ends up with func declaration
+            -   Omit parenthesis for condition => Error
+                -   Left
+                -   Right
+                -   Both
+            -   Omit condition
+                -   empty parenthesis
+                -   completely omit the condition
+        -   If with two following elif
+            -   Test separator between two elifs
+                -   Zero newline => Erorr
+                -   One newline
+                -   Two newlines
+            -   More than one statement in the leading elif => Error
+        -   If elif else
+            -   Test separator between elif and else
+                -   Zero newline => Erorr
+                -   One newline
+                -   Two newlines
+-   For stmt
+    -   control variable test
+    -   loop condition test
+        -   a logical expression
+    -   update expression test
+        -   simple expression
+    -   loop body test
+        -   omit loop body => Error
+        -   consists of two statement => Success
+    -   separator between loop body and update expression
+        -   Zero newline
+        -   One newline (**redundant**)
+        -   two newline
+    -   Omit until statement => Error
+    -   Omit by statement => Error
+    -   For Until and By lies on different line
+-   Assignment stmt
+    -   lhs test
+        -   variable id
+        -   index expression
+-   Continue stmt
+    -   ends with no newline => Error
+    -   ends with one newline
+    -   ends with three newline
+-   Break stmt
+    -   ends with no newline => Error
+    -   ends with one newline
+    -   ends with three newline
+-   Return stmt
+    -   return with no newline => Error
+    -   return with one newline
+    -   return with two newline
+    -   return with value and no new line => Error
+    -   return with value and one newline
+-   Block stmt
+    -   begin without end => Error
+    -   begin with no following newline => Error
+    -   begin with one following newline
+    -   begin with two following newnline
+    -   end without newline => Error
+    -   end without one newline
+    -   end with two newline
+    -   empty body
+    -   body with one statement
+    -   body with nested block statement
+    -   end without preceding begin
+    -   two newlines bwt each pair of statement inside the body
+-   Fucntion call stmt
+    -   array id as function id => Error
+    -   simple function call
+    -   argument list tests
+        -   empty list
+        -   singleton list
+        -   list with two arguments
+        -   list wit error separator (semicolon) => Error
+        -   omit left parenthesis
+        -   omit right parenthesis
+    -   Call without newline at the end => Error
+    -   Call with two newline at the end
+
+## Expression
+
+-   Error case
+    -   Not with no following operand
+    -   Sign with no following operand
+    -   Concat with one operand
+    -   "and" with one operand
+    -   "plus" with one operand
+    -   "division" with one operand
+    -   index operator with empty body
+    -   index operator separated with tab
+-   Index operator
+    -   body
+        -   containing variable id
+        -   containing nested index operator
+        -   containing complex operation
+        -   containing a function call
+    -   omit ']' => Error
+-   Expression with sub-expression
+-   Expression with number of opening parentheses greater than that of closing ones

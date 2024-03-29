@@ -1,0 +1,7 @@
+
+            func main() begin
+                number age
+
+                age <- 20
+            end
+    

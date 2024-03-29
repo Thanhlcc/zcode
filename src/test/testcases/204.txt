@@ -1,0 +1,4 @@
+
+            func main() begin
+                var a <- 12
+            end

@@ -1,0 +1,5 @@
+func main() begin
+            if (age > 18) print("You're in")
+            else print("Let me grow you up")
+        end
+        
