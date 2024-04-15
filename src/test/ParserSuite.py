@@ -1,512 +1,912 @@
 import unittest
-from TestUtils import TestLexer
-
-EOF = '<EOF>'
-
-def make_seq():
-    for i in range(100,200):
+from TestUtils import TestParser
+def testcase_seq():
+    for i in range(200, 400):
         yield i
-
-class LexerSuite(unittest.TestCase):
-    seq = make_seq()
-      
-    def test_101(self):
-        test = """##This is a comment
+class ParserSuite(unittest.TestCase):
+    sequence = testcase_seq()
+    
+    # Function declaration
+    def test_func_null_paralist(self):
+        input = """func main(     )
         """
-        expected = f"{EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_102(self):
-        test = "This is a string"
-        expected = f"This is a string,{EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_103(self):
-        test = '''"This is a unclosed string'''
-        expected = f"Unclosed String: This is a unclosed string"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_104(self):
-        test = "This string has escape tab \t"
-        expected = f"{test[1:-1]}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_105(self):
-        test = '''He asked: \'\"This is a string\'\"'''
-        expected = f"{test[1:-1]}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_106(self):
-        test = """ "abc\nabc" """
-        expected = f"""Unclosed String: abc"""
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_107(self):
-        test = "This is a string\\"
-        expected = f"Illegal Escape, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_108(self):
-        test = "isPrime"
-        expected = f"isPrime, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_109(self):
-        test = "_isPrime"
-        expected = f"_isPrime, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_110(self):
-        test = "isPrime1"
-        expected = f"isPrime1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_111(self):
-        test = "is_prime"
-        expected = f"is_prime, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_112(self):
-        test = "dec2oct"
-        expected = f"dec2oct, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_113(self):
-        test = "_dec2oct"
-        expected = f"_dec2oct, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_114(self):
-        test = "1"
-        expected = f"1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_115(self):
-        test = "1.01"
-        expected = f"1.01, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_116(self):
-        test = "119"
-        expected = f"119, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_117(self):
-        test = "12."
-        expected = f"12., {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_118(self):
-        test = "12e3"
-        expected = f"12e3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_119(self):
-        test = "12E3"
-        expected = f"12E3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_120(self):
-        test = "12e-30"
-        expected = f"12e-30, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_121(self):
-        test = "12E-30"
-        expected = f"12E-30, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_singleton_paralist(self):
+        input = """func main(number args)
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_122(self):
-        test = "12.1E-30"
-        expected = f"12.1E-30, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_123(self):
-        test = "12.1e30"
-        expected = f"12.1e30, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_124(self):
-        test = ".10"
-        expected = f"Error Token ., {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_125(self):
-        test = "true"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_126(self):
-        test = "false"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_127(self):
-        test = "func"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_128(self):
-        test = "number"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_129(self):
-        test = "bool"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_130(self):
-        test = "string"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_131(self):
-        test = "var"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_132(self):
-        test = "dynamic"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_133(self):
-        test = "return"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_134(self):
-        test = "for"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_135(self):
-        test = "until"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_136(self):
-        test = "by"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_137(self):
-        test = "break"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_138(self):
-        test = "continue"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_139(self):
-        test = "if"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_140(self):
-        test = "else"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_multiple_paralist(self):
+        input = """func main(string arg1, string arg2)
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_141(self):
-        test = "elif"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_implicit_decl_in_paralist(self):
+        input = """func main(dynamic varargs)
+        """
+        expect = "Error on line 1 col 10: dynamic"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_142(self):
-        test = "begin"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_143(self):
-        test = "end"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_144(self):
-        test = "not"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_145(self):
-        test = "and"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_146(self):
-        test = "or"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_147(self):
-        test = "+"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_148(self):
-        test = "-"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_149(self):
-        test = "*"
-        expected = f"This is a string, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_150(self):
-        test = "/"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_151(self):
-        test = "%"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_152(self):
-        test = "=="
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_153(self):
-        test = "="
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_154(self):
-        test = ">="
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_155(self):
-        test = "<="
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_156(self):
-        test = ">"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_157(self):
-        test = "<"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_158(self):
-        test = "..."
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_159(self):
-        test = "<-"
-        expected = f"{test}, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_160(self):
-        test = "a+1"
-        expected = f"a,+,1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_paralist_omit_closing_paren(self):
+        input = """func main (
+        """
+        expect = "Error on line 1 col 11: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_161(self):
-        test = "1+1"
-        expected = f"1,+,1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_paralist_omit_opening_paren(self):
+        input = """func main )"""
+        expect = "Error on line 1 col 10: )"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_162(self):
-        test = "4-3"
-        expected = f"4,-,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_163(self):
-        test = "a-3"
-        expected = f"a,-,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_164(self):
-        test = "1*2"
-        expected = f"1,*,2, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_165(self):
-        test = "1/3"
-        expected = f"1,/,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_166(self):
-        test = "1%3"
-        expected = f"1,%,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_167(self):
-        test = "a+2*b"
-        expected = f"a,,2+,*,b, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_168(self):
-        test = "(a+2*b)"
-        expected = f"(,a,+,2,*,b,), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_169(self):
-        test = "not true"
-        expected = f"not, true, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_170(self):
-        test = "-3"
-        expected = f"-,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_171(self):
-        test = "-a"
-        expected = f"-,a, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_172(self):
-        test = "a>2 and b>1"
-        expected = f"a,>,2,and,b,>,1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_173(self):
-        test = "true and true"
-        expected = f"true, and, true, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_174(self):
-        test = "This is a string"
-        expected = f"This is a string, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_175(self):
-        test = "b[1,2,3]"
-        expected = f"b,[,1,2,3,], {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_176(self):
-        test = "b[[1,2]]"
-        expected = f"b,[,[,1,2,],], {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_177(self):
-        test = "[[1,2],[3,4]]"
-        expected = f"[,[,1,2,],[,3,4,],], {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_178(self):
-        test = "3>3+1"
-        expected = f"3,3,+,1, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_179(self):
-        test = "---3"
-        expected = f"-,-,-,3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
-
-    def test_180(self):
-        test = """ "ab"..."ab" """
-        expected = f"ab,...,ab, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_paralist_omit_fulllist(self):
+        input = """func main
+        """
+        expect = "Error on line 1 col 9: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_181(self):
-        test = """ "ab"=="ab" """
-        expected = f"ab,==,ab, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_body_empty(self):
+        input = """func main()
+        
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
     
-    def test_182(self):
-        test = "a=b+c*2"
-        expected = f"a,=,b,+,c,*,2, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_func_body_return(self):
+        input = """func main() return 1
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_func_body_block_statement(self):
+        input = """func main() begin
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_func_body_separator_one_newline(self):
+        input = """func main()
+        return 1
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_func_body_separator_three_newline(self):
+        input = """func main()
+        
+        
+        return 1
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_var_without_asm(self):
+        input = """var name
+        """
+        expect = "Error on line 1 col 8: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_var_with_asm(self):
+        input = """var name <- "Thanh"
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_dynamic_with_asm(self):
+        input = """dynamic name <- "Thanh"
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_dynamic_without_asm(self):
+        input = """dynamic name
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_without_newline(self):
+        input = "dynamic age"
+        expect = "Error on line 1 col 11: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_implicit_with_array_id(self):
+        input = """var nums[2] <- [1,2]
+        """
+        expect = "Error on line 1 col 8: ["
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_type_boolean(self):
+        input = """bool flag
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_type_string(self):
+        input = """string name 
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_type_number(self):
+        input = """number a
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_without(self):
+        input = """number age
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_with_asm(self):
+        input = """number age <- 12
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_arrayid_zero_dim(self):
+        input = """number nums[]
+        """
+        expect = "Error on line 1 col 12: ]"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_arrayid_with_onedim(self):
+        input = """number nums[1]
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_arrayid_with_two_dimensions(self):
+        input = """number nums[1,2]
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_var_explicit_arrayid_with_trailing_comma(self):
+        input = """number nums[1,2,]
+        """
+        expect = "Error on line 1 col 16: ]"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence))) 
+    
+    def test_var_explicit_arrayid_with_leading_comma(self):
+        input = """number nums[,]
+        """
+        expect = "Error on line 1 col 12: ,"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_zero_newline_bwt_condition_body(self):
+        input = """func main() begin
+            if (age > 18) print("you're in")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_one_newline_bwt_condition_body(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("you're in")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_three_newline_bwt_condition_body(self):
+        input = """func main() begin
+            if (age > 18) 
+            
+            
+            print("you're in")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_body_omitted_end(self):
+        input = """func main() begin
+            if (age > 18)
+        end
+        """
+        expect = "Error on line 3 col 8: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_body_omitted_EOF(self):
+        input = """func main() begin
+            if (age > 18)
+        """
+        expect = "Error on line 3 col 8: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_condition_left_parenthesis_omitted(self):
+        input = """func main() begin
+            if age > 18) print("You're in")
+        end
+        """
+        expect = "Error on line 2 col 15: age"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_condition_right_parenthesis_omitted(self):
+        input = """func main() begin
+            if (age > 18 print("You're in")
+        end
+        """
+        expect = "Error on line 2 col 25: print"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_condition_both_parenthesis_omitted(self):
+        input = """func main() begin
+            if age > 18 print("You're in")
+        end
+        """
+        expect = "Error on line 2 col 15: age"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_condition_omitted_empty_condition(self):
+        input = """func main() begin
+            if () print("You're in")
+        end
+        """
+        expect = "Error on line 2 col 16: )"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_ifstmt_condition_omitted_completely(self):
+        input = """func main() begin
+            if print("You're in")
+        end
+        """
+        expect = "Error on line 2 col 15: print"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence))) 
 
-    def test_183(self):
-        test = "funcCall()"
-        expected = f"funcCall,(,), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_else_with_condition(self):
+        input = """func main() begin
+            if (age > 18) print("You're in")
+            else (age <= 18) print("Let me grow you up")
+        end
+        """
+        expect = "Error on line 3 col 17: ("
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_simple_else(self):
+        input = """func main() begin
+            if (age > 18) print("You're in")
+            else print("Let me grow you up")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_else_without_preceding_if(self):
+        input = """func main() begin
+            else print("Let me grow you up")
+        end
+        """
+        expect = "Error on line 2 col 12: else"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_else_with_two_interfering_stmt(self):
+        input = """func main() begin
+            if (age > 18) print("You're in")
+            print("Cumming baby")
+            else print("Let me grow you up")
+        end
+        """
+        expect = "Error on line 4 col 12: else"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_else_with_one_following_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in")
+            else 
+                print("Let me grow you up")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_else_with_three_following_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in")
+            else
 
-    def test_184(self):
-        test = "a[5]=1+2"
-        expected = f"a,[,5,],=,1,+,2, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
 
-    def test_185(self):
-        test = "(1+2)/(3+4)"
-        expected = f"(,1,+,2,),/,(,3,+,4,), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+            print("Let me grow you up")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_186(self):
-        test = "(1=2) and (3=4)"
-        expected = f"(,1,=,2,),and,(,3,=,4,), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    
+    def test_else_body_omitted_end(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in")
+            else
 
-    def test_187(self):
-        test = """abc\\abc"""
-        expected = f"""Illegal Escape In String: abc\\a, {EOF}"""
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+        end
+        """
+        expect = "Error on line 6 col 8: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_else_body_omitted_EOF(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in")
+            else
+        """
+        expect = "Error on line 5 col 8: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_separator_between_if_else_zero_newline(self):
+        input = """func main() begin
+            if (age > 18) print("You're in") else print("let me grow u up")
+        end
+        """
+        expect = "Error on line 2 col 45: else"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_separator_between_if_else_multiple_newline(self):
+        input = """func main() begin
+            if (age > 18) print("You're in") 
+            
+            
+            else print("let me grow u up")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    def test_if_one_elif_body_separator_zero_newline(self):
+        input = """func main() begin
+            if (age > 18) print("You're in") 
+            elif (age > 15) print("You're not of my interest")
+        end
+        """  
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_one_elif_body_separator_one_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15) 
+                print("You're not of my interest")
+        end
+        """  
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_188(self):
-        test = "(a+b*(2*c))"
-        expected = f"(,a,+,b,*,(,2,*,c,),), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    
+    def test_if_one_elif_body_separator_three_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15)
 
-    def test_189(self):
-        test = "a or true"
-        expected = f"This is a string, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
 
-    def test_190(self):
-        test = "a or false"
-        expected = f"a,or,false, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+            print("You're not of my interest")
+        end
+        """  
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_191(self):
-        test = "a or (true and b)"
-        expected = f"a,or,(,true,and,b,), {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+  
+    def test_if_one_elif_body_omitted_end(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15)
+        
+        end
+        """  
+        expect = "Error on line 6 col 8: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_192(self):
-        test = '''""'''
-        expected = f",{EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+   
+    def test_if_one_elif_body_omitted_EOF(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15)
+        """  
+        expect = "Error on line 5 col 8: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_193(self):
-        test = '''"'''
-        expected = f"Unclosed String: , {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
 
-    def test_194(self):
-        test = '''"this is a string'''
-        expected = f"Unclosed String: this is a string, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_if_one_elif_condition_leftP_omitted(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif age > 15)
+                print("You're not of my interest")
+        """  
+        expect = "Error on line 4 col 17: age"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
 
-    def test_195(self):
-        test = """##abc\n#abc"""
-        expected = f"{EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+   
+    def test_if_one_elif_condition_rightP_omitted(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif (age > 15
+                print("You're not of my interest")
+        """  
+        expect = "Error on line 4 col 26: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_one_elif_condition_both_omitted(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif age > 15
+                print("You're not of my interest")
+        """  
+        expect = "Error on line 4 col 17: age"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_one_elif_condition_empty(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ()
+                print("You're not of my interest")
+        """  
+        expect = "Error on line 4 col 18: )"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_one_elif_condition_omitted(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif
+                print("You're not of my interest")
+        """  
+        expect = "Error on line 4 col 16: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_two_elif_zero_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest") elif ( age > 10 ) print("cut")
+        
+        end
+        """   
+        expect = "Error on line 4 col 65: elif"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_two_elif_one_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest")
+            elif ( age > 10 ) print("cut")
+        end
+        """   
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_two_elif_three_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest")
 
-    def test_196(self):
-        test = "##abc\nbc"
-        expected = f"bc, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
 
-    def test_197(self):
-        test = "###comment"
-        expected = f"{EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+            elif ( age > 10 ) print("cut")
+        end
+        """   
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
 
-    def test_198(self):
-        test = "#abc"
-        expected = f"Error Token #, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+    def test_if_two_leading_elif_two_stmt_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) 
+                print("You're not of my interest")
+                print("You're not of my interest")
+            elif ( age > 10 ) print("cut")
+        end
+        """   
+        expect = "Error on line 7 col 12: elif"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_if_elif_else_zero_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest") else print("You're not of my interest")
+        end
+        """   
+        expect = "Error on line 4 col 65: else"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    def test_if_elif_else_one_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest")
+            else print("You're not of my interest")
+        end
+        """   
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))  
+    
+    def test_if_elif_else_three_newline(self):
+        input = """func main() begin
+            if (age > 18) 
+                print("You're in") 
+            elif ( age > 15 ) print("You're not of my interest") 
+            
+            
+            else print("You're not of my interest")
+        end
+        """   
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))  
+    
+    def test_loop_control_variable(self):
+        input = """func main() begin
+            var i <- 0
+            for i until i < 10 by 1 print("Hello")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_loop_invalid_condition(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until return 3 by 1 
+                print("Hello")
+        end
+        """
+        expect = "Error on line 4 col 24: return"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_loop_simple_update_expression(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 by update() 
+                print("Hello")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_loop_empty_body(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 by update()
 
-    def test_199(self):
-        test = "12\\3abc"
-        expected = f"Illegal Escape In String 12\\3, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+        end
+        """
+        expect = "Error on line 6 col 8: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_loop_complex_body(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 by update() begin
+                var num1 <- readNumber()
+                var num2 <- readNumber()
+                if (isPrime(x)) writeString("Yes")
+                else writeString("No")
+            end
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_separator_loop_body_and_update_expr_three_newline(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 by update()
+            
 
-    def test_200(self):
-        test = "var 2a <- 12"
-        expected = f"var, Error Token 2, {EOF}"
-        self.assertTrue(TestLexer.test(test, expected, next(self.seq)))
+            print("Hello World")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    def test_separator_loop_body_and_update_expr_no_newline(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 by update() print("Hello World")
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))        
+    def test_loop_until_omitted(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i by update() 
+                print("Hello World")
+        end
+        """
+        expect = "Error on line 4 col 18: by"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_loop_by_omitted(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100
+                print("Hello World")
+        end
+        """
+        expect = "Error on line 4 col 31: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_loop_until_and_by_on_different_line(self):
+        input = """
+        func main() begin
+            var i <- 0
+            for i until i < 100 
+            by update() print("Hello World")
+        end
+        """
+        expect = "Error on line 4 col 32: \n"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_asm_lhs_variableId(self):
+        input = """
+            func main() begin
+                number age
+
+                age <- 20
+            end
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_asm_lhs_variableId(self):
+        input = """
+            func main() begin
+                number nums[1,2]
+
+                nums <- [[1,2]]
+            end
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_asm_lhs_arrayId(self):
+        input = """
+            func main() begin
+                number age
+
+                age <- 20
+            end
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_continue_no_endline(self):
+        input = """
+            func main() begin
+                for i until 10 by 1 
+                    if (i == 2) continue end
+    """
+        expect = "Error on line 4 col 41: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_continue_one_endline(self):
+        input = """
+            func main() begin
+                for i until 10 by 1 
+                    if (i == 2) continue 
+            end
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_continue_three_endline(self):
+        input = """
+
+                    func main() begin
+                for i until 10 by 1 
+                    if (i == 2) continue 
+
+
+
+            end
+
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_break_no_endline(self):
+        input = """
+            func main() begin
+                for i until 10 by 1 
+                    if (i = 2) break end
+    """
+        expect = "Error on line 4 col 37: end"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_break_one_endline(self):
+        input = """
+            func main() begin
+                for i until 10 by 1 
+                    if (i = 2) break
+            end
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_break_three_endline(self):
+        input = """
+
+                    func main() begin
+                for i until 10 by 1 
+                    if (i == 2) break 
+
+
+
+            end
+
+    """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_return_with_no_newline(self):
+        input = """
+            func main() return"""
+        expect = "Error on line 2 col 30: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_return_with_one_newline(self):
+        input = """
+            func main() return
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    def test_return_with_two_newline(self):
+        input = """
+            func main() return
+
+
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_return_with_value_no_newline(self):
+        input = """
+            func main() return 1"""
+        expect = "Error on line 2 col 32: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_return_with_value_one_newline(self):
+        input = """
+            func main() return 1
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_block_begin_without_end(self):
+        input = """
+            func main() begin
+    
+                
+                var a <- 12
+        """
+        expect = "Error on line 6 col 8: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_block_begin_without_following_newline(self):
+        input = """
+            func main() begin var a <- 12 
+            end
+        """
+        expect = "Error on line 2 col 30: var"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_block_no_newline_after_end(self):
+        input = """
+            func main() begin
+                var a <- 12
+            end"""
+        expect = "Error on line 4 col 15: <EOF>"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_block_three_newline_after_end(self):
+        input = """
+            func main() begin
+                begin
+                    dynamic name <- "Thanh"
+                end
+
+                
+                print("hello")
+            end
+            
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_funccall_id_test(self):
+        input = """
+        number nums[2] <- [1,2]
+        func main() begin
+            nums[1]()
+        end
+        """
+        expect = "Error on line 4 col 19: ("
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_funccall_id_valid(self):
+        input = """
+        func foo()
+        func main() begin
+            foo()
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_funccall_paramlist_one(self):
+        input = """
+        func foo()
+        func main() begin
+            foo(1)
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_funccall_paramlist_two(self):
+        input = """
+        func foo()
+        func main() begin
+            foo(koo(), boo())
+        end
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))    
+    
+    def test_funccall_paramlist_error_sep(self):
+        input = """
+        func main() begin
+            foo(boo() foo()) 
+        end
+        """
+        expect = "Error on line 3 col 22: foo"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_func_paralist_invalid_sep(self):
+        input = """
+            func main(number a / string b)
+        """
+        expect = "Error on line 2 col 31: /"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    
+    def test_empty_array_init(self):
+        input = """number nums <- []
+        """
+        expect = "Error on line 1 col 16: ]"
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+    def test_invalid_numbervar_loop(self):
+        input = """
+            func main() begin
+                for foo() until 10 by 1
+                    print("Hello")
+            end
+        """
+        expect = "Error on line 3 col 23: ("
+        self.assertTrue(TestParser.test(input,expect,next(self.sequence)))
+
+    
