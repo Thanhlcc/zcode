@@ -1,4 +1,4 @@
-func main() begin
-            if (age > 18 print("You're in")
-        end
-        
+
+## G3{@~%p/t
+## uY($4&7
+var a <- 1

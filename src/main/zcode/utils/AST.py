@@ -239,11 +239,13 @@ class Block(Stmt):
 
 # used for variable or parameter declaration
 class VarDecl(Decl, Stmt):
-    # name: Id
-    # varType: Type = None  # None if there is no type
-    # modifier: str = None  # None if there is no modifier
-    # varInit: Expr = None  # None if there is no initial
+    """
+    name: Id
+    varType: Type = None  # None if there is no type
+    modifier: str = None  # None if there is no modifier
+    varInit: Expr = None  # None if there is no initial
 
+    """
     def __init__(self, name: Id, varType : Type = None, modifier : str =None, varInit : Expr =None):
         self.name = name
         self.varType = varType
@@ -285,6 +287,9 @@ class StringType(Type):
     def __str__(self):
         return "StringType"
 
+class VoidType(Type):
+    def __str__(self):
+        return "VoidType"
 
 class ArrayType(Type):
     # size: List[float]
